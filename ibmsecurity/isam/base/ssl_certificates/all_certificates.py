@@ -17,9 +17,13 @@ def get_all_certificates (isamAppliance, check_mode=False, force=False):
 	
 	certs=[]
 	dbs_obj = isamAppliance.invoke_get("Retrieve all certificate databases", uri)
+	if dbs_obj["status_code"] != 0:
+		return dbs_obj
 	dbs=dbs_obj['data']
 	for db in dbs:
 		pcert_obj=isamAppliance.invoke_get("Retrieve personal certificates", "{0}/{1}/personal_cert".format(uri,db['id']))
+		if pcert_obj["status_code"] != 0:
+			return pcert_obj
 		pcerts=pcert_obj['data']
 		for pcert in pcerts:
 			cert_epoch = int(pcert['notafter_epoch'])
@@ -35,6 +39,8 @@ def get_all_certificates (isamAppliance, check_mode=False, force=False):
 						})
 
 		scert_obj=isamAppliance.invoke_get("Retrieve signer certificates", "{0}/{1}/signer_cert".format(uri,db['id']))
+		if scert_obj["status_code"] != 0:
+			return scert_obj		
 		scerts=scert_obj['data']
 		for scert in scerts:
 			cert_epoch = int(scert['notafter_epoch'])
