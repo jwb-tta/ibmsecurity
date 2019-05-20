@@ -22,6 +22,7 @@ def get_all_certificates (isamAppliance, check_mode=False, force=False):
 	dbs=dbs_obj['data']
 	for db in dbs:
 		pcert_obj=isamAppliance.invoke_get("Retrieve personal certificates", "{0}/{1}/personal_cert".format(uri,db['id']))
+		logger.info("Got object {0}".format(pcert_obj))
 		if pcert_obj["status_code"] != 0:
 			return pcert_obj
 		pcerts=pcert_obj['data']
