@@ -22,4 +22,5 @@ def execute(isamAppliance, isamUser, commands, admin_domain='Default'):
                                          "admin_pwd": isamUser.password,
                                          "commands": commands,
                                          "admin_domain": admin_domain
-                                     })
+                                     },
+                                     ignore_error=True)

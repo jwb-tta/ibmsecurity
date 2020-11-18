@@ -85,7 +85,8 @@ def delete(isamAppliance, id, admin_pwd, admin_id='sec_master', check_mode=False
                                             data={
                                                 "operation": "unconfigure",
                                                 "admin_id": admin_id,
-                                                "admin_pwd": admin_pwd
+                                                "admin_pwd": admin_pwd,
+                                                "force": force
                                             },
                                             requires_modules=requires_modules, requires_version=requires_version)
 

@@ -30,7 +30,7 @@ def get_isam_user(isamAppliance, check_mode=False, force=False):
     return ret_obj['data']['urn:ietf:params:scim:schemas:extension:isam:1.0:User']
 
 
-def update_user_profile(isamAppliance, ldap_connection, user_suffix, search_suffix, check_mode=False, force=False):
+def update_user_profile(isamAppliance, ldap_connection, user_suffix, search_suffix, check_mode=False, force=False, mappings=None):
     """
     Update SCIM user profile settings
     """
@@ -42,6 +42,16 @@ def update_user_profile(isamAppliance, ldap_connection, user_suffix, search_suff
     ret_obj['ldap_connection'] = ldap_connection
     ret_obj['user_suffix'] = user_suffix
     ret_obj['search_suffix'] = search_suffix
+
+    if mappings != None:
+        logger.debug("SCIM User Attribute Mapping defined: {}".format(mappings))
+        for i in range(len(ret_obj["mappings"])):
+            scim_attribute = ret_obj["mappings"][i]["scim_attribute"]            
+            if scim_attribute in mappings:
+                ret_obj["mappings"][i]["mapping"]["source"] = mappings[scim_attribute]["source"]
+                ret_obj["mappings"][i]["mapping"]["type"] = mappings[scim_attribute]["type"]
+                logger.debug("SCIM User Attribute Changed {}".format(scim_attribute))
+
     return isamAppliance.invoke_put(
         "Update SCIM user profile settings",
         "/mga/scim/configuration/urn:ietf:params:scim:schemas:core:2.0:User",
